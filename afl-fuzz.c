@@ -1116,7 +1116,10 @@ HANDLE_RESPONSES:
 
   //give the server a bit more time to gracefully terminate
   while(1) {
-    int status = kill(child_pid, 0);
+    // it might be the case that this is the first time we try to
+    // shut down the child, so we have to send SIGTERM.
+    int status = kill(child_pid, SIGTERM);
+    // Check if the process doesn't exist anymore....
     if ((status != 0) && (errno == ESRCH)) break;
   }
 
